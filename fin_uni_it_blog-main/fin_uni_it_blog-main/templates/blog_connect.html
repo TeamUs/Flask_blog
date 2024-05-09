@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Connect</h1>
+  <ul>
+    {% for connect in connects %}
+      <li><a href="{{ url_for('get_blog_post', post_id=connect.id) }}">{{ connect.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

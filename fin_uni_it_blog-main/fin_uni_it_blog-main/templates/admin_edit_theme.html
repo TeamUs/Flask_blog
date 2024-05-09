@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+        <h1>Изменить тему</h1>
+        <form action="" method="post">
+            <label for="name">Название на русском:</label>
+            <input type="text" id="name" name="name" value="{{ theme.name }}"><br><br>
+            <label for="name">Название на английском:</label>
+            <input type="text" id="name_en" name="name_en" value="{{ theme.name_en }}">
+            <input type="submit" value="Изменить">
+        </form>
+    </main>
+    {% else %}
+    <main>
+        <h1>Edit theme</h1>
+        <form action="" method="post">
+            <label for="name">Russion name:</label>
+            <input type="text" id="name" name="name" value="{{ theme.name }}"><br><br>
+            <label for="name">English name:</label>
+            <input type="text" id="name_en" name="name_en" value="{{ theme.name_en }}">
+            <input type="submit" value="Update Theme">
+        </form>
+    </main>
+    {%endif%}
+{% endblock %}

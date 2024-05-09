@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+    <h1>Изменить публикацию</h1>
+    <form action="" method="post">
+        <label for="title">Название:</label>
+        <input type="text" id="title" name="title" value="{{ post.title }}"><br><br>
+        <label for="content">Содержание:</label>
+        <textarea id="content" name="content">{{ post.content }}</textarea><br><br>
+        <label for="theme_id">Тема:</label>
+        <select id="theme_id" name="theme_id">
+            {% for theme in themes %}
+            <option value="{{ theme.id }}" {% if theme.id == post.theme_id %}selected{% endif %}>{{ theme.name }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="language">Язык:</label>
+        <select id="language" name="language">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+        </select><br><br>
+        <input type="submit" value="Обновить">
+    </form>
+        </main>
+{% else %}
+<main>
+    <h1>Edit post</h1>
+    <form action="" method="post">
+        <label for="title">Name:</label>
+        <input type="text" id="title" name="title" value="{{ post.title }}"><br><br>
+        <label for="content">Content:</label>
+        <textarea id="content" name="content">{{ post.content }}</textarea><br><br>
+        <label for="theme_id">Theme:</label>
+        <select id="theme_id" name="theme_id">
+            {% for theme in themes %}
+            <option value="{{ theme.id }}" {% if theme.id == post.theme_id %}selected{% endif %}>{{ theme.name_en }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="language">Language:</label>
+        <select id="language" name="language">
+            <option value="en">English</option>
+            <option value="ru">Russian</option>
+        </select><br><br>
+        <input type="submit" value="Update Post">
+    </form>
+</main>
+{%endif%}
+{% endblock %}

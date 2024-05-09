@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+    <h1>Контакты и обратная связь</h1>
+    <p>Вы всегда можете связаться с нами</p>
+    <p>По всем вопросам обращаться по адресу:</p>
+    <p>Email: trash@gmail.com</p>
+    <p>Телефон: +1234567890</p>
+</main>
+{% else %}
+<main>
+    <h1>Our contacts</h1>
+    <p>You can always contact us</p>
+    <p>For all questions, please contact:</p>
+    <p>Email: trash@gmail.com</p>
+    <p>Phone: +1234567890</p>
+</main>
+{%endif%}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cont">
+    
+  <ul>
+      <li>{{ post.title }}</h1></li>
+      <li><p>{{ post.content }}</p></li>
+      <li><p>Автор: {{ post.author.username }}</p></li>
+      <li><p>Тема: {{ post.theme.name }}</p></li>
+      <li><p>Язык: {{ post.language }}</p></li>
+  </ul>
+</div>
+{% endblock %}

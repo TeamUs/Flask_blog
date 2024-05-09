@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+    <div class="table-container mt-5"> <!-- добавлено отступ сверху -->
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center text-dark">
+                <h1 class="display-4 fw-bold mb-4">Результаты предсказания</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Пол</th>
+                        <th scope="col">Возраст</th>
+                        <th scope="col">Тариф</th>
+                        <th scope="col">Предсказанное выживание</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for passenger in test_data %}
+                    <tr>
+                        <td>{{ passenger.Sex }}</td>
+                        <td>{{ passenger.Age }}</td>
+                        <td>{{ passenger.Fare }}</td>
+                        <td>{{ passenger.Predicted }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% else %}
+<main>
+    <div class="table-container mt-5"> <!-- добавлено отступ сверху -->
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center text-dark">
+                <h1 class="display-4 fw-bold mb-4">Results prediction</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Sex</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col">Survive</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for passenger in test_data %}
+                    <tr>
+                        <td>{{ passenger.Sex }}</td>
+                        <td>{{ passenger.Age }}</td>
+                        <td>{{ passenger.Fare }}</td>
+                        <td>{{ passenger.Predicted }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{%endif%}
+{% endblock %}

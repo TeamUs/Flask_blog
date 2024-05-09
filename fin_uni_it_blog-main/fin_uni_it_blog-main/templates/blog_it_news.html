@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>IT News</h1>
+  <ul>
+    {% for it_news in it_news %}
+      <li><a href="{{ url_for('get_blog_post', post_id=it_news.id) }}">{{ it_news.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

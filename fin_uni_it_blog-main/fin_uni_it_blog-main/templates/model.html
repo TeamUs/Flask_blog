@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">Модельное обучение и предсказание</h1>
+                    <p class="mb-4" style="color: white;">Выберите модель</p>
+                    <form method="post">
+                        <select name="model">
+                            <option value="gradient_boosting">Градиентный бустинг</option>
+                            <option value="polynomial_regression">Полиноминальная регрессия</option>
+                            <option value="rnn">RNN</option>
+                        </select>
+                        <button type="submit">Выбрать</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+{% else %}
+<main>
+<div class="row">
+    <div class="col-md-8 mx-auto text-center text-white">
+        <h1 class="display-4 fw-bold mb-4">Model prediction</h1>
+        <p class="mb-4" style="color: white;">Choose model</p>
+        <form method="post">
+            <select name="model">
+                <option value="gradient_boosting">Gradient boosting</option>
+                <option value="polynomial_regression">Polynomialregression</option>
+                <option value="rnn">RNN</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+</main>
+{%endif%}
+{% endblock %}

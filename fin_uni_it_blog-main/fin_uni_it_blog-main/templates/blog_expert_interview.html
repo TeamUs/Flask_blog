@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Expert Interviews</h1>
+  <ul>
+    {% for expert_interview in expert_interviews %}
+      <li><a href="{{ url_for('get_blog_post', post_id=expert_interview.id) }}">{{ expert_interview.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if language == 'ru' %}
+<main>
+    <h1>Создать тему</h1>
+    <form action="" method="post">
+        <label for="name">Название на русском:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="name">Название на английском:</label>
+        <input type="text" id="name_en" name="name_en" required>
+        <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+</main>
+{% else %}
+<main>
+    <h1>Create theme</h1>
+    <form action="" method="post">
+        <label for="name">Russian name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="name">English name:</label>
+        <input type="text" id="name_en" name="name_en" required>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</main>
+{%endif%}
+{% endblock %}

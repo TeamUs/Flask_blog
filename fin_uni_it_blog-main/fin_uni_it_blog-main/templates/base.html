@@ -1,0 +1,116 @@
+{% macro content_if_true() %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+      <nav>
+        <ul class="nav-left">
+          <li><a href="{{ url_for('index') }}">Главная</a></li>
+          <li><a href="{{ url_for('model') }}">Модели</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Разделы блога</a>
+            <ul class="dropdown-menu">
+                {% for theme in themes %}
+                <li><a href="{{ url_for('theme_posts', theme_id=theme.id) }}">{{ theme.name }}</a></li>
+                {% endfor %}
+                <br>
+                <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+            </ul>
+            </li>
+        </ul>
+        <ul class="nav-right">
+          {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('create_post') }}">+</a></li>
+            <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+            <li><a href="{{ url_for('edit_user') }}">Пользователь</a></li>
+            {% if current_user.is_admin %}
+              <li><a href="{{ url_for('admin_panel') }}">Админ</a></li>
+            {% endif %}
+          {% else %}
+            <li><button id="login-btn">Войти</button></li>
+            <li><button id="register-btn">Регистрация</button></li>
+          {% endif %}
+          <li>
+            {% if language == 'ru' %}
+              <a href="{{ url_for('switch_language') }}">EN</a>
+            {% else %}
+              <a href="{{ url_for('switch_language') }}">RU</a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+    </main>
+</body>
+</html>
+
+{% endmacro %}
+{% macro content_if_false() %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+      <nav>
+        <ul class="nav-left">
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('model') }}">Models</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Blog themes</a>
+                <ul class="dropdown-menu">
+                    {% for theme in themes %}
+                    <li><a href="{{ url_for('theme_posts', theme_id=theme.id) }}">{{ theme.name_en }}</a></li>
+                    {% endfor %}
+                    <br>
+                    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav-right">
+          {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('create_post') }}">+</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            <li><a href="{{ url_for('edit_user') }}">Edit user</a></li>
+            {% if current_user.is_admin %}
+              <li><a href="{{ url_for('admin_panel') }}">Admin</a></li>
+            {% endif %}
+          {% else %}
+            <li><button id="login-btn">Login</button></li>
+            <li><button id="register-btn">Register</button></li>
+          {% endif %}
+          <li>
+            {% if language == 'ru' %}
+              <a href="{{ url_for('switch_language') }}">EN</a>
+            {% else %}
+              <a href="{{ url_for('switch_language') }}">RU</a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+    </main>
+</body>
+</html>
+
+{% endmacro %}
+
+{% if language == 'ru' %}
+    {{ content_if_true() }}
+{% else %}
+    {{ content_if_false() }}
+{% endif %}
+
+{% block content %}{% endblock %}

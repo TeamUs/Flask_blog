@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Translations for {{ post.title }}</h1>
+  <ul>
+    {% for translation in translations %}
+      <li>
+        {{ translation.lang }}: {{ translation.text }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

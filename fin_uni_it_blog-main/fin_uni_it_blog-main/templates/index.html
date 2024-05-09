@@ -1,0 +1,430 @@
+
+{% if language == 'ru' %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-left">
+              <li><a href="{{ url_for('index') }}">Главная</a></li>
+              <li><a href="{{ url_for('model') }}">Модели</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Разделы блога</a>
+                <ul class="dropdown-menu">
+                    {% for theme in themes %}
+                    <li><a href="{{ url_for('theme_posts', theme_id=theme.id) }}">{{ theme.name_en }}</a></li>
+                    {% endfor %}
+                    <br>
+                    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+                </ul>
+                </li>
+            </ul>
+            <ul class="nav-right">
+              {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('create_post') }}">+</a></li>
+                <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+                <li><a href="{{ url_for('edit_user') }}">Пользователь</a></li>
+                {% if current_user.is_admin %}
+                  <li><a href="{{ url_for('admin_panel') }}">Админ</a></li>
+                {% endif %}
+              {% else %}
+                <li><button id="login-btn">Войти</button></li>
+                <li><button id="register-btn">Регистрация</button></li>
+              {% endif %}
+              <li>
+                {% if language == 'ru' %}
+                  <a href="{{ url_for('switch_language') }}">EN</a>
+                {% else %}
+                  <a href="{{ url_for('switch_language') }}">RU</a>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>
+    </header>
+    <main>
+      <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <form id="login-form" enctype="application/x-www-form-urlencoded">
+                <label for="username">Имя:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password"><br><br>
+                <input type="submit" value="Login" id="submit-btn">
+            </form>
+        </div>
+      </div>
+
+      <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <form id="register-form" enctype="application/x-www-form-urlencoded">
+                <label for="username">Имя:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <label for="email">Почта:</label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password"><br><br>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+      </div>
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-md-6 bg-white p-4"> <!-- Left block -->
+            <h2 class="text-dark mb-4">Добро пожаловать в блог IT-карьеры</h2>
+            <p class="text-dark">Здесь вы найдете самые свежие новости, полезные статьи и советы от экспертов в области информационных технологий. Присоединяйтесь к нам и будьте в курсе последних событий в мире IT!
+            </p>
+            
+            <h1 class="text-dark">Публикации</h1>
+            <ul class="list-unstyled mb-0">
+              {% for post in posts %}
+
+              <li class="bg-dark text-white p-3 mb-2">
+                <a href="{{ url_for('post_detail', post_id=post.id) }}" class="text-white">{{ post.title }}</a>
+                <p class="text-white">Автор: {{ post.author.username }}</p>
+                <p class="text-white">Темы: {{ post.theme.name }}</p>
+                {% if current_user.is_authenticated and current_user.id == post.author_id %}
+                <a href="{{ url_for('edit_post', post_id=post.id) }}" class="text-white">Edit</a>
+                <a href="{{ url_for('delete_post', post_id=post.id) }}" class="text-white">Delete</a>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            {% if pagination %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item fixed-left">
+        {% if pagination.has_prev %}
+          <a class="page-link" href="{{ url_for('index', page=pagination.prev_num) }}">Previous</a>
+        {% else %}
+          <span class="page-link disabled">Previous</span>
+        {% endif %}
+      </li>
+
+      {% if pagination.pages <= 6 %}
+        {% for page in range(1, pagination.pages + 1) %}
+          {% if page == pagination.page %}
+            <li class="page-item active">
+              <a class="page-link" href="#">{{ page }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('index', page=page) }}">{{ page }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% set start_page = pagination.page - 2 %}
+        {% set end_page = pagination.page + 3 %}
+        {% if start_page < 1 %}
+          {% set start_page = 1 %}
+          {% set end_page = 6 %}
+        {% endif %}
+        {% if end_page > pagination.pages %}
+          {% set end_page = pagination.pages %}
+          {% set start_page = end_page - 5 %}
+        {% endif %}
+
+        {% for page in range(start_page, end_page + 1) %}
+          {% if page == pagination.page %}
+            <li class="page-item active">
+              <a class="page-link" href="#">{{ page }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('index', page=page) }}">{{ page }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <li class="page-item fixed-right">
+        {% if pagination.has_next %}
+          <a class="page-link" href="{{ url_for('index', page=pagination.next_num) }}">Next</a>
+        {% else %}
+          <span class="page-link disabled">Next</span>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+{% endif %}
+          </div>
+          <div class="col-md-6"> <!-- Right block -->
+            <img src="https://img.freepik.com/premium-vector/programmer-and-engineering-development-coding-web-development-website-design-developer-vector_199064-126.jpg" alt="Приветствие" class="img-fluid">
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      document.querySelector('#login-btn').addEventListener('click', function() {
+          document.querySelector('#login-modal').classList.add('show');
+      });
+
+      document.querySelector('#register-btn').addEventListener('click', function() {
+          document.querySelector('#register-modal').classList.add('show');
+      });
+
+      document.querySelectorAll('.close-modal').forEach(function(button) {
+          button.addEventListener('click', function() {
+              document.querySelector('#login-modal').classList.remove('show');
+              document.querySelector('#register-modal').classList.remove('show');
+          });
+      });
+
+      document.querySelector('#login-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          fetch('/login', { method: 'POST', body: formData })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.querySelector('#login-modal').classList.remove('show');
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+      });
+
+      document.querySelector('#register-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          fetch('/register', { method: 'POST', body: formData })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.querySelector('#register-modal').classList.remove('show');
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+      });
+  </script>
+</body>
+</html>
+
+
+
+
+
+{% else %}
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-left">
+              <li><a href="{{ url_for('index') }}">Home</a></li>
+              <li><a href="{{ url_for('model') }}">Models</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Blog themes</a>
+                    <ul class="dropdown-menu">
+                        {% for theme in themes %}
+                        <li><a href="{{ url_for('theme_posts', theme_id=theme.id) }}">{{ theme.name_en }}</a></li>
+                        {% endfor %}
+                        <br>
+                        <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+                    </ul>
+                    </li>
+            </ul>
+            <ul class="nav-right">
+              {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('create_post') }}">+</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li><a href="{{ url_for('edit_user') }}">Edit user</a></li>
+                {% if current_user.is_admin %}
+                  <li><a href="{{ url_for('admin_panel') }}">Admin</a></li>
+                {% endif %}
+              {% else %}
+                <li><button id="login-btn">Login</button></li>
+                <li><button id="register-btn">Register</button></li>
+              {% endif %}
+              <li>
+                {% if language == 'ru' %}
+                  <a href="{{ url_for('switch_language') }}">EN</a>
+                {% else %}
+                  <a href="{{ url_for('switch_language') }}">RU</a>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>
+    </header>
+    <main>
+      <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <form id="login-form" enctype="application/x-www-form-urlencoded">
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"><br><br>
+                <input type="submit" value="Login" id="submit-btn">
+            </form>
+        </div>
+      </div>
+
+      <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <form id="register-form" enctype="application/x-www-form-urlencoded">
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"><br><br>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+      </div>
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-md-6 bg-white p-4"> <!-- Left block -->
+            <h2 class="text-dark mb-4">Welcome to the IT career blog</h2>
+            <p class="text-dark">Here you will find the latest news, useful articles and tips from experts in the field of information technology. Join us and stay up to date with the latest developments in the IT world!</p>
+            
+            <h1 class="text-dark">Posts</h1>
+            <ul class="list-unstyled mb-0">
+              {% for post in posts %}
+
+              <li class="bg-dark text-white p-3 mb-2">
+                <a href="{{ url_for('post_detail', post_id=post.id) }}" class="text-white">{{ post.title }}</a>
+                <p class="text-white">Author: {{ post.author.username }}</p>
+                <p class="text-white">Theme: {{ post.theme.name_en }}</p>
+                {% if current_user.is_authenticated and current_user.id == post.author_id %}
+                <a href="{{ url_for('edit_post', post_id=post.id) }}" class="text-white">Edit</a>
+                <a href="{{ url_for('delete_post', post_id=post.id) }}" class="text-white">Delete</a>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            {% if pagination %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item fixed-left">
+        {% if pagination.has_prev %}
+          <a class="page-link" href="{{ url_for('index', page=pagination.prev_num) }}">Previous</a>
+        {% else %}
+          <span class="page-link disabled">Previous</span>
+        {% endif %}
+      </li>
+
+      {% if pagination.pages <= 6 %}
+        {% for page in range(1, pagination.pages + 1) %}
+          {% if page == pagination.page %}
+            <li class="page-item active">
+              <a class="page-link" href="#">{{ page }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('index', page=page) }}">{{ page }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% set start_page = pagination.page - 2 %}
+        {% set end_page = pagination.page + 3 %}
+        {% if start_page < 1 %}
+          {% set start_page = 1 %}
+          {% set end_page = 6 %}
+        {% endif %}
+        {% if end_page > pagination.pages %}
+          {% set end_page = pagination.pages %}
+          {% set start_page = end_page - 5 %}
+        {% endif %}
+
+        {% for page in range(start_page, end_page + 1) %}
+          {% if page == pagination.page %}
+            <li class="page-item active">
+              <a class="page-link" href="#">{{ page }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('index', page=page) }}">{{ page }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <li class="page-item fixed-right">
+        {% if pagination.has_next %}
+          <a class="page-link" href="{{ url_for('index', page=pagination.next_num) }}">Next</a>
+        {% else %}
+          <span class="page-link disabled">Next</span>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+{% endif %}
+          </div>
+          <div class="col-md-6"> <!-- Right block -->
+            <img src="https://img.freepik.com/premium-vector/programmer-and-engineering-development-coding-web-development-website-design-developer-vector_199064-126.jpg" alt="Приветствие" class="img-fluid">
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      document.querySelector('#login-btn').addEventListener('click', function() {
+          document.querySelector('#login-modal').classList.add('show');
+      });
+
+      document.querySelector('#register-btn').addEventListener('click', function() {
+          document.querySelector('#register-modal').classList.add('show');
+      });
+
+      document.querySelectorAll('.close-modal').forEach(function(button) {
+          button.addEventListener('click', function() {
+              document.querySelector('#login-modal').classList.remove('show');
+              document.querySelector('#register-modal').classList.remove('show');
+          });
+      });
+
+      document.querySelector('#login-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          fetch('/login', { method: 'POST', body: formData })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.querySelector('#login-modal').classList.remove('show');
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+      });
+
+      document.querySelector('#register-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          fetch('/register', { method: 'POST', body: formData })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.querySelector('#register-modal').classList.remove('show');
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+      });
+  </script>
+</body>
+</html>
+
+{% endif %}
